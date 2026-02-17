@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-PROJECT_DIR="/var/www/html/demo"
+PROJECT_DIR="/var/www/html"
 FRAMEWORK="${FRAMEWORK:-none}"  # Valores: symfony, laravel, none
 
 # Crear el directorio del proyecto Symfony si no existe
 if [ "$FRAMEWORK" = "symfony" ] && [ ! -f "$PROJECT_DIR/composer.json" ]; then
   echo "⚙️  Creando proyecto Symfony en $PROJECT_DIR..."
-  composer create-project symfony/skeleton:"6.4.*" "$PROJECT_DIR" --no-interaction --prefer-dist
+  composer create-project symfony/skeleton:"7.4.*" "$PROJECT_DIR" --no-interaction --prefer-dist
   echo "✅ Proyecto Symfony creado correctamente."
 elif [ "$FRAMEWORK" = "symfony" ]; then
   echo "✅ Proyecto Symfony ya presente, no se vuelve a crear."

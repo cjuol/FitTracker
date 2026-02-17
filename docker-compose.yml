@@ -3,11 +3,11 @@ services:
     build:
       context: ./web
     environment:
-      - FRAMEWORK=none  #laravel o symfony, o none
+      - FRAMEWORK=symfony  #laravel o symfony, o none
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
-      - ./development:/var/www/html/demo 
+      - ./development:/var/www/html 
     depends_on:
       - db
   db:

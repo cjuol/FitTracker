@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Fitness Tracker{% endblock %}</title>
+        
+        {% block stylesheets %}
+            {# Aquí se carga Tailwind #}
+            {{ importmap('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {# Si no pones esto aquí o en el head, el JS nunca se descarga #}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl w-full max-w-lg">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-black italic tracking-tighter text-blue-500 uppercase">Nueva Sesión</h2>
+        <button @click="$emit('close')" class="text-slate-500 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <div class="flex bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800">
+        <button @click="localType = 'strength'" 
+            :class="localType === 'strength' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500'"
+            class="flex-1 py-2 rounded-lg font-bold uppercase text-[10px] transition-all">🏋️ Fuerza</button>
+        <button @click="localType = 'cardio'" 
+            :class="localType === 'cardio' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500'"
+            class="flex-1 py-2 rounded-lg font-bold uppercase text-[10px] transition-all ml-1">🏃 Cardio</button>
+    </div>
+
+    <textarea 
+        v-model="localContent" 
+        class="w-full bg-slate-950 border-slate-800 rounded-2xl text-slate-100 text-sm focus:ring-blue-600 focus:border-blue-600 h-32 mb-6 p-4 placeholder-slate-700"
+        :placeholder="localType === 'strength' ? 'Press Militar, 10, 2, 50\nPeso Muerto, 5, 1, 140...' : 'Running, 5.5, 30, 155...'"></textarea>
+
+    <button 
+        @click="submitForm" 
+        :disabled="isSaving"
+        class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-[0.2em] transition-all active:scale-95 disabled:opacity-50">
+        <span v-if="!isSaving">Registrar Entrenamiento</span>
+        <span v-else class="flex items-center justify-center italic">
+            <svg class="animate-spin h-4 w-4 mr-2 border-2 border-white/20 border-t-white rounded-full" viewBox="0 0 24 24"></svg>
+            Procesando...
+        </span>
+    </button>
+</div>

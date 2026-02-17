@@ -1,11 +1,11 @@
 FROM php:8.3-apache
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/demo/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 # Instalar dependencias básicas y extensiones PHP necesarias
 RUN apt-get update && apt-get install -y \
     git unzip zip curl wget gnupg libzip-dev libicu-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install zip intl pdo pdo_mysql
+    && docker-php-ext-install zip intl pdo pdo_mysql xml
 
 
 
@@ -21,12 +21,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN a2enmod rewrite
 
 # Ajustar la raíz del documento en Apache
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
-    sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf && \
+    sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf && \
+    sed -ri '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Copiar entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-WORKDIR /var/www/html/demo
+WORKDIR /var/www/html
 ENTRYPOINT ["/entrypoint.sh"]
