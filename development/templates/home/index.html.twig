@@ -1,0 +1,358 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FitTracker - Seguimiento de Actividades{% endblock %}
+
+{% block body %}
+<!-- Mobile-first Application Container -->
+<div id="app" class="container">
+    <!-- Login/Register Screen -->
+    <div id="auth-screen" class="p-4">
+        <!-- Header -->
+        <div class="text-center py-8">
+            <h1 class="text-3xl font-bold text-indigo-600 mb-2">💪 FitTracker</h1>
+            <p class="text-gray-600">Tu compañero de fitness</p>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="flex mb-6 border-b border-gray-200">
+            <button onclick="showAuthTab('login')" id="login-tab" class="tab active">
+                Iniciar Sesión
+            </button>
+            <button onclick="showAuthTab('register')" id="register-tab" class="tab">
+                Registrarse
+            </button>
+        </div>
+        
+        <!-- Login Form -->
+        <div id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="login-email" placeholder="tu@email.com">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button onclick="handleLogin()" class="btn-primary">
+                Iniciar Sesión
+            </button>
+            <div id="login-error" class="hidden alert-error"></div>
+        </div>
+        
+        <!-- Register Form -->
+        <div id="register-form" class="hidden space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="register-email" placeholder="tu@email.com">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                <input type="password" id="register-password" placeholder="••••••••">
+            </div>
+            <button onclick="handleRegister()" class="btn-primary">
+                Crear Cuenta
+            </button>
+            <div id="register-error" class="hidden alert-error"></div>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard (Hidden by default) -->
+    <div id="dashboard-screen" class="hidden">
+        <!-- Header -->
+        <div class="bg-indigo-600 text-white p-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold">💪 FitTracker</h1>
+                <button onclick="handleLogout()" class="text-sm bg-indigo-700 px-3 py-1 rounded-lg">
+                    Salir
+                </button>
+            </div>
+        </div>
+        
+        <!-- Add Activity Button -->
+        <div class="p-4">
+            <button onclick="showAddActivity()" class="btn-primary shadow-md flex items-center justify-center gap-2" style="padding: 1rem;">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Nueva Actividad
+            </button>
+        </div>
+        
+        <!-- Activities List -->
+        <div class="px-4 pb-4">
+            <h2 class="text-lg font-semibold text-gray-700 mb-3">Mis Actividades</h2>
+            <div id="activities-list" class="space-y-3">
+                <div class="flex items-center justify-center py-8 text-gray-500">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Activity Modal -->
+    <div id="add-activity-modal" class="hidden modal-overlay">
+        <div class="modal-content">
+            <div class="p-4">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-700">Nueva Actividad</h3>
+                    <button onclick="hideAddActivity()" class="text-gray-500" style="background: none; padding: 0;">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Activity Type Selection -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Actividad</label>
+                    <select id="activity-type">
+                        <option value="strength">Fuerza</option>
+                        <option value="cardio">Cardio</option>
+                        <option value="hybrid">Híbrido / Hyrox</option>
+                    </select>
+                </div>
+                
+                <!-- Activity Content -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea id="activity-content" rows="6" placeholder="Describe tu actividad...&#10;&#10;Ejemplo Fuerza:&#10;Press Banca: 80kg x 10, 85kg x 8, 90kg x 6&#10;&#10;Ejemplo Cardio:&#10;Correr 5km en 25min"></textarea>
+                </div>
+                
+                <!-- Submit Button -->
+                <button onclick="handleAddActivity()" class="btn-primary">
+                    Guardar Actividad
+                </button>
+                
+                <div id="add-activity-error" class="hidden mt-3 alert-error"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // API Base URL
+    const API_URL = '/api';
+    let authToken = localStorage.getItem('fittracker_token');
+    
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+        if (authToken) {
+            showDashboard();
+            loadActivities();
+        }
+    });
+    
+    // Auth Tab Switching
+    function showAuthTab(tab) {
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        
+        if (tab === 'login') {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        } else {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        }
+    }
+    
+    // Handle Login
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const errorDiv = document.getElementById('login-error');
+        
+        try {
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                authToken = data.token;
+                localStorage.setItem('fittracker_token', authToken);
+                errorDiv.classList.add('hidden');
+                showDashboard();
+                loadActivities();
+            } else {
+                errorDiv.textContent = data.error || 'Error al iniciar sesión';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Error de conexión. Por favor, intenta de nuevo.';
+            errorDiv.classList.remove('hidden');
+        }
+    }
+    
+    // Handle Register
+    async function handleRegister() {
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const errorDiv = document.getElementById('register-error');
+        
+        try {
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                authToken = data.token;
+                localStorage.setItem('fittracker_token', authToken);
+                errorDiv.classList.add('hidden');
+                showDashboard();
+                loadActivities();
+            } else {
+                errorDiv.textContent = data.error || 'Error al registrarse';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Error de conexión. Por favor, intenta de nuevo.';
+            errorDiv.classList.remove('hidden');
+        }
+    }
+    
+    // Handle Logout
+    function handleLogout() {
+        authToken = null;
+        localStorage.removeItem('fittracker_token');
+        document.getElementById('dashboard-screen').classList.add('hidden');
+        document.getElementById('auth-screen').classList.remove('hidden');
+    }
+    
+    // Show Dashboard
+    function showDashboard() {
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('dashboard-screen').classList.remove('hidden');
+    }
+    
+    // Load Activities
+    async function loadActivities() {
+        const listDiv = document.getElementById('activities-list');
+        
+        try {
+            const response = await fetch(`${API_URL}/activities`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to load activities');
+            }
+            
+            const activities = await response.json();
+            
+            if (activities.length === 0) {
+                listDiv.innerHTML = '<p class="text-center text-gray-500 py-8">No hay actividades registradas.<br>¡Comienza agregando tu primera actividad!</p>';
+            } else {
+                listDiv.innerHTML = activities.map(activity => `
+                    <div class="activity-card">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="badge">
+                                ${getActivityTypeLabel(activity.type)}
+                            </span>
+                            <span class="text-sm text-gray-500">
+                                ${formatDate(activity.createdAt)}
+                            </span>
+                        </div>
+                        <p class="text-gray-700 text-sm whitespace-pre-line">${activity.rawContent || 'Sin descripción'}</p>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            listDiv.innerHTML = '<p class="text-center text-red-500 py-8">Error al cargar actividades</p>';
+        }
+    }
+    
+    // Show Add Activity Modal
+    function showAddActivity() {
+        document.getElementById('add-activity-modal').classList.remove('hidden');
+    }
+    
+    // Hide Add Activity Modal
+    function hideAddActivity() {
+        document.getElementById('add-activity-modal').classList.add('hidden');
+        document.getElementById('activity-content').value = '';
+        document.getElementById('add-activity-error').classList.add('hidden');
+    }
+    
+    // Handle Add Activity
+    async function handleAddActivity() {
+        const type = document.getElementById('activity-type').value;
+        const content = document.getElementById('activity-content').value;
+        const errorDiv = document.getElementById('add-activity-error');
+        
+        if (!content.trim()) {
+            errorDiv.textContent = 'Por favor, describe tu actividad';
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_URL}/activities/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({ type, content })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                hideAddActivity();
+                loadActivities();
+            } else {
+                errorDiv.textContent = data.error || 'Error al guardar la actividad';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Error de conexión. Por favor, intenta de nuevo.';
+            errorDiv.classList.remove('hidden');
+        }
+    }
+    
+    // Utility Functions
+    function getActivityTypeLabel(type) {
+        const labels = {
+            'strength': '💪 Fuerza',
+            'cardio': '🏃 Cardio',
+            'hybrid': '⚡ Híbrido'
+        };
+        return labels[type] || type;
+    }
+    
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Hoy';
+        if (diffDays === 1) return 'Ayer';
+        if (diffDays < 7) return `Hace ${diffDays} días`;
+        
+        return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+    }
+</script>
+{% endblock %}
