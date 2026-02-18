@@ -258,11 +258,20 @@
         const listDiv = document.getElementById('activities-list');
         
         try {
-            const response = await fetch(`${API_URL}/activities`, {
+            const response = await fetch(`${API_URL}/activities/`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
             });
+            
+            if (response.status === 401) {
+                // Token is invalid or expired, clear and redirect to auth
+                authToken = null;
+                localStorage.removeItem('fittracker_token');
+                document.getElementById('dashboard-screen').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                return;
+            }
             
             if (!response.ok) {
                 throw new Error('Failed to load activities');
@@ -325,6 +334,16 @@
                 },
                 body: JSON.stringify({ type, content })
             });
+            
+            if (response.status === 401) {
+                // Token is invalid or expired, clear and redirect to auth
+                authToken = null;
+                localStorage.removeItem('fittracker_token');
+                hideAddActivity();
+                document.getElementById('dashboard-screen').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                return;
+            }
             
             const data = await response.json();
             
