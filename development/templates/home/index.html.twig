@@ -4,21 +4,21 @@
 
 {% block body %}
 <!-- Mobile-first Application Container -->
-<div id="app" class="container">
+<div id="app" class="max-w-md mx-auto bg-white dark:bg-gray-800 min-h-screen shadow-lg">
     <!-- Login/Register Screen -->
     <div id="auth-screen" class="p-4">
         <!-- Header -->
         <div class="text-center py-8">
-            <h1 class="text-3xl font-bold text-indigo-600 mb-2">💪 FitTracker</h1>
-            <p class="text-gray-600">Tu compañero de fitness</p>
+            <h1 class="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">💪 FitTracker</h1>
+            <p class="text-gray-600 dark:text-gray-400">Tu compañero de fitness</p>
         </div>
         
         <!-- Tabs -->
-        <div class="flex mb-6 border-b border-gray-200">
-            <button onclick="showAuthTab('login')" id="login-tab" class="tab active">
+        <div class="flex mb-6 border-b border-gray-200 dark:border-gray-700">
+            <button onclick="showAuthTab('login')" id="login-tab" class="flex-1 py-3 text-center font-semibold border-b-2 border-primary-600 dark:border-primary-500 text-primary-600 dark:text-primary-400 transition-colors">
                 Iniciar Sesión
             </button>
-            <button onclick="showAuthTab('register')" id="register-tab" class="tab">
+            <button onclick="showAuthTab('register')" id="register-tab" class="flex-1 py-3 text-center font-semibold border-b-2 border-transparent text-gray-500 dark:text-gray-400 transition-colors">
                 Registrarse
             </button>
         </div>
@@ -26,43 +26,43 @@
         <!-- Login Form -->
         <div id="login-form" class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="login-email" placeholder="tu@email.com">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                <input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all" placeholder="tu@email.com">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                <input type="password" id="login-password" placeholder="••••••••">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña</label>
+                <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all" placeholder="••••••••">
             </div>
-            <button onclick="handleLogin()" class="btn-primary">
+            <button onclick="handleLogin()" class="w-full bg-primary-600 dark:bg-primary-500 text-white font-semibold py-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:bg-primary-800 dark:active:bg-primary-700 transition-all">
                 Iniciar Sesión
             </button>
-            <div id="login-error" class="hidden alert-error"></div>
+            <div id="login-error" class="hidden p-3 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg text-sm"></div>
         </div>
         
         <!-- Register Form -->
         <div id="register-form" class="hidden space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="register-email" placeholder="tu@email.com">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                <input type="email" id="register-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all" placeholder="tu@email.com">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                <input type="password" id="register-password" placeholder="••••••••">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña</label>
+                <input type="password" id="register-password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all" placeholder="••••••••">
             </div>
-            <button onclick="handleRegister()" class="btn-primary">
+            <button onclick="handleRegister()" class="w-full bg-primary-600 dark:bg-primary-500 text-white font-semibold py-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:bg-primary-800 dark:active:bg-primary-700 transition-all">
                 Crear Cuenta
             </button>
-            <div id="register-error" class="hidden alert-error"></div>
+            <div id="register-error" class="hidden p-3 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg text-sm"></div>
         </div>
     </div>
     
     <!-- Main Dashboard (Hidden by default) -->
     <div id="dashboard-screen" class="hidden">
         <!-- Header -->
-        <div class="bg-indigo-600 text-white p-4">
+        <div class="bg-primary-600 dark:bg-primary-700 text-white p-4">
             <div class="flex justify-between items-center">
                 <h1 class="text-xl font-bold">💪 FitTracker</h1>
-                <button onclick="handleLogout()" class="text-sm bg-indigo-700 px-3 py-1 rounded-lg">
+                <button onclick="handleLogout()" class="text-sm bg-primary-700 dark:bg-primary-800 px-3 py-1 rounded-lg hover:bg-primary-800 dark:hover:bg-primary-900 transition-all">
                     Salir
                 </button>
             </div>
@@ -70,7 +70,7 @@
         
         <!-- Add Activity Button -->
         <div class="p-4">
-            <button onclick="showAddActivity()" class="btn-primary shadow-md flex items-center justify-center gap-2" style="padding: 1rem;">
+            <button onclick="showAddActivity()" class="w-full bg-primary-600 dark:bg-primary-500 text-white font-semibold py-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:bg-primary-800 dark:active:bg-primary-700 shadow-md transition-all flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -80,23 +80,23 @@
         
         <!-- Activities List -->
         <div class="px-4 pb-4">
-            <h2 class="text-lg font-semibold text-gray-700 mb-3">Mis Actividades</h2>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Mis Actividades</h2>
             <div id="activities-list" class="space-y-3">
-                <div class="flex items-center justify-center py-8 text-gray-500">
-                    <div class="spinner"></div>
+                <div class="flex items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                    <div class="border-4 border-gray-200 dark:border-gray-600 border-t-primary-600 dark:border-t-primary-500 rounded-full w-10 h-10 animate-spin"></div>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Add Activity Modal -->
-    <div id="add-activity-modal" class="hidden modal-overlay">
-        <div class="modal-content">
+    <div id="add-activity-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50">
+        <div class="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 rounded-t-3xl modal-max-h overflow-y-auto">
             <div class="p-4">
                 <!-- Modal Header -->
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-700">Nueva Actividad</h3>
-                    <button onclick="hideAddActivity()" class="text-gray-500" style="background: none; padding: 0;">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Nueva Actividad</h3>
+                    <button onclick="hideAddActivity()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -105,8 +105,8 @@
                 
                 <!-- Activity Type Selection -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Actividad</label>
-                    <select id="activity-type">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Actividad</label>
+                    <select id="activity-type" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                         <option value="strength">Fuerza</option>
                         <option value="cardio">Cardio</option>
                         <option value="hybrid">Híbrido / Hyrox</option>
@@ -115,16 +115,16 @@
                 
                 <!-- Activity Content -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
-                    <textarea id="activity-content" rows="6" placeholder="Describe tu actividad...&#10;&#10;Ejemplo Fuerza:&#10;Press Banca: 80kg x 10, 85kg x 8, 90kg x 6&#10;&#10;Ejemplo Cardio:&#10;Correr 5km en 25min"></textarea>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                    <textarea id="activity-content" rows="6" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all" placeholder="Describe tu actividad...&#10;&#10;Ejemplo Fuerza:&#10;Press Banca: 80kg x 10, 85kg x 8, 90kg x 6&#10;&#10;Ejemplo Cardio:&#10;Correr 5km en 25min"></textarea>
                 </div>
                 
                 <!-- Submit Button -->
-                <button onclick="handleAddActivity()" class="btn-primary">
+                <button onclick="handleAddActivity()" class="w-full bg-primary-600 dark:bg-primary-500 text-white font-semibold py-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:bg-primary-800 dark:active:bg-primary-700 transition-all">
                     Guardar Actividad
                 </button>
                 
-                <div id="add-activity-error" class="hidden mt-3 alert-error"></div>
+                <div id="add-activity-error" class="hidden mt-3 p-3 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg text-sm"></div>
             </div>
         </div>
     </div>
@@ -153,13 +153,25 @@
         const registerForm = document.getElementById('register-form');
         
         if (tab === 'login') {
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
+            loginTab.classList.remove('border-transparent', 'text-gray-500');
+            loginTab.classList.add('border-primary-600', 'text-primary-600');
+            loginTab.classList.add('dark:border-primary-500', 'dark:text-primary-400');
+            
+            registerTab.classList.add('border-transparent', 'text-gray-500');
+            registerTab.classList.remove('border-primary-600', 'text-primary-600');
+            registerTab.classList.remove('dark:border-primary-500', 'dark:text-primary-400');
+            
             loginForm.classList.remove('hidden');
             registerForm.classList.add('hidden');
         } else {
-            registerTab.classList.add('active');
-            loginTab.classList.remove('active');
+            registerTab.classList.remove('border-transparent', 'text-gray-500');
+            registerTab.classList.add('border-primary-600', 'text-primary-600');
+            registerTab.classList.add('dark:border-primary-500', 'dark:text-primary-400');
+            
+            loginTab.classList.add('border-transparent', 'text-gray-500');
+            loginTab.classList.remove('border-primary-600', 'text-primary-600');
+            loginTab.classList.remove('dark:border-primary-500', 'dark:text-primary-400');
+            
             registerForm.classList.remove('hidden');
             loginForm.classList.add('hidden');
         }
@@ -263,19 +275,19 @@
             const activities = await response.json();
             
             if (activities.length === 0) {
-                listDiv.innerHTML = '<p class="text-center text-gray-500 py-8">No hay actividades registradas.<br>¡Comienza agregando tu primera actividad!</p>';
+                listDiv.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-8">No hay actividades registradas.<br>¡Comienza agregando tu primera actividad!</p>';
             } else {
                 listDiv.innerHTML = activities.map(activity => `
-                    <div class="activity-card">
+                    <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 shadow-sm">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="badge">
+                            <span class="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 text-sm font-semibold rounded-full">
                                 ${getActivityTypeLabel(activity.type)}
                             </span>
-                            <span class="text-sm text-gray-500">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">
                                 ${formatDate(activity.createdAt)}
                             </span>
                         </div>
-                        <p class="text-gray-700 text-sm whitespace-pre-line">${escapeHtml(activity.rawContent || 'Sin descripción')}</p>
+                        <p class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line">${escapeHtml(activity.rawContent || 'Sin descripción')}</p>
                     </div>
                 `).join('');
             }
