@@ -62,9 +62,15 @@
         <div class="bg-primary-600 dark:bg-primary-700 text-white p-4">
             <div class="flex justify-between items-center">
                 <h1 class="text-xl font-bold">💪 FitTracker</h1>
-                <button onclick="handleLogout()" class="text-sm bg-primary-700 dark:bg-primary-800 px-3 py-1 rounded-lg hover:bg-primary-800 dark:hover:bg-primary-900 transition-all">
-                    Salir
-                </button>
+                <div class="flex gap-2 items-center">
+                    <button onclick="toggleDarkMode()" class="text-sm bg-primary-700 dark:bg-primary-800 px-3 py-1 rounded-lg hover:bg-primary-800 dark:hover:bg-primary-900 transition-all" title="Cambiar tema">
+                        <span class="dark:hidden">🌙</span>
+                        <span class="hidden dark:inline">☀️</span>
+                    </button>
+                    <button onclick="handleLogout()" class="text-sm bg-primary-700 dark:bg-primary-800 px-3 py-1 rounded-lg hover:bg-primary-800 dark:hover:bg-primary-900 transition-all">
+                        Salir
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -247,6 +253,20 @@
         document.getElementById('auth-screen').classList.remove('hidden');
     }
     
+    // Toggle Dark Mode
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        const isDark = html.classList.contains('dark');
+        
+        if (isDark) {
+            html.classList.remove('dark');
+            localStorage.setItem('darkMode', 'false');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('darkMode', 'true');
+        }
+    }
+    
     // Handle Unauthorized (401) Response
     function handleUnauthorized() {
         authToken = null;
@@ -361,6 +381,13 @@
     }
     
     // Utility Functions
+    
+    /**
+     * Escapes HTML entities in user-provided text to prevent XSS attacks.
+     * Converts special characters like <, >, &, etc. into their HTML entity equivalents.
+     * @param {string} text - The text to escape
+     * @returns {string} The escaped HTML-safe text
+     */
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;

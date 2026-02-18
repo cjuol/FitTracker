@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,25 @@
     <meta name="theme-color" content="#1F2937" media="(prefers-color-scheme: dark)">
     <meta name="description" content="FitTracker - Tu aplicación de seguimiento de actividades físicas">
     <title>{% block title %}FitTracker{% endblock %}</title>
+    
+    <script>
+        // Dark mode initialization - respects user preference
+        (function() {
+            const userPreference = localStorage.getItem('darkMode');
+            const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Priority: 1) localStorage preference, 2) system preference, 3) default to dark
+            const shouldBeDark = userPreference !== null 
+                ? userPreference === 'true' 
+                : systemPreference !== false ? systemPreference : true;
+            
+            if (shouldBeDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     
     <style>
         /* Tailwind-style CSS Reset */
