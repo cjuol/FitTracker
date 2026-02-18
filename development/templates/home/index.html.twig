@@ -275,7 +275,7 @@
                                 ${formatDate(activity.createdAt)}
                             </span>
                         </div>
-                        <p class="text-gray-700 text-sm whitespace-pre-line">${activity.rawContent || 'Sin descripción'}</p>
+                        <p class="text-gray-700 text-sm whitespace-pre-line">${escapeHtml(activity.rawContent || 'Sin descripción')}</p>
                     </div>
                 `).join('');
             }
@@ -334,6 +334,12 @@
     }
     
     // Utility Functions
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
     function getActivityTypeLabel(type) {
         const labels = {
             'strength': '💪 Fuerza',
