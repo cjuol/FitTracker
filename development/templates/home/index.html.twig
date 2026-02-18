@@ -247,6 +247,14 @@
         document.getElementById('auth-screen').classList.remove('hidden');
     }
     
+    // Handle Unauthorized (401) Response
+    function handleUnauthorized() {
+        authToken = null;
+        localStorage.removeItem('fittracker_token');
+        document.getElementById('dashboard-screen').classList.add('hidden');
+        document.getElementById('auth-screen').classList.remove('hidden');
+    }
+    
     // Show Dashboard
     function showDashboard() {
         document.getElementById('auth-screen').classList.add('hidden');
@@ -265,11 +273,7 @@
             });
             
             if (response.status === 401) {
-                // Token is invalid or expired, clear and redirect to auth
-                authToken = null;
-                localStorage.removeItem('fittracker_token');
-                document.getElementById('dashboard-screen').classList.add('hidden');
-                document.getElementById('auth-screen').classList.remove('hidden');
+                handleUnauthorized();
                 return;
             }
             
@@ -336,12 +340,8 @@
             });
             
             if (response.status === 401) {
-                // Token is invalid or expired, clear and redirect to auth
-                authToken = null;
-                localStorage.removeItem('fittracker_token');
                 hideAddActivity();
-                document.getElementById('dashboard-screen').classList.add('hidden');
-                document.getElementById('auth-screen').classList.remove('hidden');
+                handleUnauthorized();
                 return;
             }
             
