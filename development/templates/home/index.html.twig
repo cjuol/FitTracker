@@ -153,24 +153,20 @@
         const registerForm = document.getElementById('register-form');
         
         if (tab === 'login') {
-            loginTab.classList.remove('border-transparent', 'text-gray-500');
-            loginTab.classList.add('border-primary-600', 'text-primary-600');
-            loginTab.classList.add('dark:border-primary-500', 'dark:text-primary-400');
+            loginTab.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            loginTab.classList.add('border-primary-600', 'text-primary-600', 'dark:border-primary-500', 'dark:text-primary-400');
             
-            registerTab.classList.add('border-transparent', 'text-gray-500');
-            registerTab.classList.remove('border-primary-600', 'text-primary-600');
-            registerTab.classList.remove('dark:border-primary-500', 'dark:text-primary-400');
+            registerTab.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            registerTab.classList.remove('border-primary-600', 'text-primary-600', 'dark:border-primary-500', 'dark:text-primary-400');
             
             loginForm.classList.remove('hidden');
             registerForm.classList.add('hidden');
         } else {
-            registerTab.classList.remove('border-transparent', 'text-gray-500');
-            registerTab.classList.add('border-primary-600', 'text-primary-600');
-            registerTab.classList.add('dark:border-primary-500', 'dark:text-primary-400');
+            registerTab.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            registerTab.classList.add('border-primary-600', 'text-primary-600', 'dark:border-primary-500', 'dark:text-primary-400');
             
-            loginTab.classList.add('border-transparent', 'text-gray-500');
-            loginTab.classList.remove('border-primary-600', 'text-primary-600');
-            loginTab.classList.remove('dark:border-primary-500', 'dark:text-primary-400');
+            loginTab.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            loginTab.classList.remove('border-primary-600', 'text-primary-600', 'dark:border-primary-500', 'dark:text-primary-400');
             
             registerForm.classList.remove('hidden');
             loginForm.classList.add('hidden');
