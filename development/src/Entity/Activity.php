@@ -7,6 +7,7 @@ use App\Repository\ActivityRepository;
 use App\Model\ActivitySetInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -30,6 +31,10 @@ class Activity
 
     #[ORM\Column(enumType: ActivityType::class)]
     private ?ActivityType $type = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -92,6 +97,18 @@ class Activity
     public function setType(ActivityType $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

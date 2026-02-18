@@ -10,6 +10,7 @@ use App\Service\ActivityProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ActivityRepository;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,12 @@ final class ActivityController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        $activities = $this->activityRepository->findAllLatest();
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $activities = $this->activityRepository->findAllLatest($user);
         
         // Symfony serializa automáticamente el array de objetos a JSON
         return $this->json($activities);
@@ -51,6 +57,11 @@ final class ActivityController extends AbstractController
         $payload = json_decode($request->getContent(), true);
         
         try {
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            }
+
             $type = ActivityType::from($payload['type'] ?? '');
 
             if (!empty($payload['sets']) && \is_array($payload['sets'])) {
@@ -67,6 +78,7 @@ final class ActivityController extends AbstractController
             $activity->setPayloadFromSets($sets);
             $activity->setActive(true);
             $activity->setCreatedAt(new \DateTimeImmutable('now'));
+            $activity->setUser($user);
 
             // Usamos el nuevo método del Repository
             $this->activityRepository->save($activity);

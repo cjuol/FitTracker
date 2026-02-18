@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Activity;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -33,8 +34,10 @@ class ActivityRepository extends ServiceEntityRepository
      * Retorna todas las actividades ordenadas por las más recientes.
      * @return Activity[]
      */
-    public function findAllLatest(): array
+    public function findAllLatest(?User $user = null): array
     {
-        return $this->findBy([], ['createdAt' => 'DESC']);
+        $criteria = $user ? ['user' => $user] : [];
+
+        return $this->findBy($criteria, ['createdAt' => 'DESC']);
     }
 }
