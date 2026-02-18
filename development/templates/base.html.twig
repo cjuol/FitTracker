@@ -17,7 +17,7 @@
             // Priority: 1) localStorage preference, 2) system preference, 3) default to dark
             const shouldBeDark = userPreference !== null 
                 ? userPreference === 'true' 
-                : systemPreference !== false ? systemPreference : true;
+                : systemPreference;
             
             if (shouldBeDark) {
                 document.documentElement.classList.add('dark');
