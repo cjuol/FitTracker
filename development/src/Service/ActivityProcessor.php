@@ -16,6 +16,30 @@ use App\Model\ActivitySetInterface;
 final class ActivityProcessor
 {
     /**
+     * Procesa sets estructurados enviados por el formulario.
+     * @param array<int, array<string, mixed>> $sets
+     * @return ActivitySetInterface[]
+     */
+    public function processStructured(ActivityType $type, array $sets): array
+    {
+        $processedData = [];
+
+        foreach ($sets as $set) {
+            if (!\is_array($set)) {
+                continue;
+            }
+
+            $processedData[] = match ($type) {
+                ActivityType::STRENGTH => $this->createStrengthSetFromArray($set),
+                ActivityType::CARDIO   => $this->createCardioSetFromArray($set),
+                ActivityType::HYBRID   => $this->createStrengthSetFromArray($set),
+            };
+        }
+
+        return $processedData;
+    }
+
+    /**
      * Procesa el contenido y devuelve un array de objetos (Fuerza o Cardio).
      * * @return ActivitySetInterface[]
      * @throws \InvalidArgumentException Si el formato de línea no es válido para el tipo.
@@ -62,8 +86,22 @@ final class ActivityProcessor
     }
 
     /**
+     * @param array<string, mixed> $set
+     */
+    private function createStrengthSetFromArray(array $set): StrengthSet
+    {
+        return new StrengthSet(
+            exercise: (string) ($set['exercise'] ?? ''),
+            reps:     (int) ($set['reps'] ?? 0),
+            rir:      (int) ($set['rir'] ?? 0),
+            weight:   (float) ($set['weight'] ?? 0),
+            note:     $set['note'] ?? null
+        );
+    }
+
+    /**
      * Mapea los datos a un objeto de Cardio.
-     * Estructura esperada: Actividad, Distancia(km), Tiempo(min), FC_Media(opcional)
+     * Estructura esperada: Actividad, Distancia(km), Tiempo(min), FC_Media(opcional), Nota(opcional)
      */
     private function createCardioSet(array $parts): CardioSet
     {
@@ -71,7 +109,22 @@ final class ActivityProcessor
             activityName:    trim($parts[0]),
             distanceKm:      (float) $parts[1],
             durationMinutes: (int) $parts[2],
-            avgHeartRate:    isset($parts[3]) ? (int) $parts[3] : null
+            avgHeartRate:    isset($parts[3]) && $parts[3] !== '' ? (int) $parts[3] : null,
+            note:            $parts[4] ?? null
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $set
+     */
+    private function createCardioSetFromArray(array $set): CardioSet
+    {
+        return new CardioSet(
+            activityName:    (string) ($set['activityName'] ?? $set['activity'] ?? ''),
+            distanceKm:      (float) ($set['distanceKm'] ?? $set['distance'] ?? 0),
+            durationMinutes: (int) ($set['durationMinutes'] ?? $set['duration'] ?? 0),
+            avgHeartRate:    isset($set['avgHeartRate']) ? (int) $set['avgHeartRate'] : (isset($set['avg_hr']) ? (int) $set['avg_hr'] : null),
+            note:            $set['note'] ?? null
         );
     }
 }

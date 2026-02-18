@@ -1,25 +1,32 @@
 import './styles/app.css';
-import { createApp } from 'vue/dist/vue.esm-browser.js';
-import ActivityApp from './components/RecentActivities.js'; // Cambiado a .js
+import { createApp, ref, onMounted } from 'vue/dist/vue.esm-browser.js';
+import RecentActivities from './components/RecentActivities.js';
+import ActivityForm from './components/ActivityForm.js';
 
 const app = createApp({
     components: {
-        RecentActivities // Registramos el componente
+        RecentActivities,
+        ActivityForm
     },
     setup() {
         const activities = ref([]);
         const showForm = ref(false);
 
         const fetchActivities = async () => {
-            const response = await fetch('/api/activities');
+            const response = await fetch('/api/activities/');
             activities.value = await response.json();
         };
 
         
 
+        const onActivitySaved = async () => {
+            await fetchActivities();
+            showForm.value = false;
+        };
+
         onMounted(fetchActivities);
 
-        return { activities, showForm };
+        return { activities, showForm, onActivitySaved };
     }
 });
 

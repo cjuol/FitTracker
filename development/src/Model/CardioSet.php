@@ -9,7 +9,8 @@ final readonly class CardioSet implements ActivitySetInterface
         public string $activityName,
         public float $distanceKm,
         public int $durationMinutes,
-        public ?int $avgHeartRate = null
+        public ?int $avgHeartRate = null,
+        public ?string $note = null
     ) {}
 
     public function toArray(): array
@@ -19,6 +20,7 @@ final readonly class CardioSet implements ActivitySetInterface
             'distance' => $this->distanceKm,
             'duration' => $this->durationMinutes,
             'avg_hr'   => $this->avgHeartRate,
+            'note'     => $this->note,
         ];
     }
 }

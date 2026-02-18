@@ -6,14 +6,15 @@
         
         {% block stylesheets %}
             {# Aquí se carga Tailwind #}
-            {{ importmap('app') }}
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
-        {% block javascripts %}
-            {# Si no pones esto aquí o en el head, el JS nunca se descarga #}
-        {% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
+        {% block javascripts %}
+            {# Importmap carga el JS principal #}
+            {{ importmap('app') }}
+        {% endblock %}
     </body>
 </html>

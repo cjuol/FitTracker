@@ -1,11 +1,43 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<main class="flex-1 relative ...">
-    <div v-if="showForm" class="absolute inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <activity-form @saved="onActivitySaved" @close="showForm = false"></activity-form>
+<div id="activity-app" class="min-h-screen bg-slate-950 text-slate-100">
+    <div class="mx-auto w-full max-w-screen-sm lg:max-w-6xl px-4 py-6">
+        <div class="flex flex-col lg:flex-row lg:gap-8">
+            <main class="w-full lg:w-[70%] relative">
+                <header class="text-center lg:text-left">
+                    <h1 class="text-2xl md:text-3xl lg:text-5xl font-black uppercase tracking-tight">Fit Tracker</h1>
+                    <p class="text-slate-400 text-sm md:text-base mt-2">Registra tus sesiones y revisa tu progreso.</p>
+                </header>
+
+                <div class="mt-8 flex justify-center lg:justify-start">
+                    <button @click="showForm = true" class="relative h-20 w-20 md:h-16 md:w-16 rounded-full bg-blue-600 text-white shadow-xl active:scale-95 transition-all" aria-label="Nueva actividad">
+                        <span class="absolute inset-0 rounded-full bg-blue-600/40 animate-ping" aria-hidden="true"></span>
+                        <span class="relative flex h-full w-full items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <div v-if="showForm" class="absolute inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <activity-form @saved="onActivitySaved" @close="showForm = false"></activity-form>
+                </div>
+            </main>
+
+            <aside class="w-full lg:w-[30%] mt-10 lg:mt-0">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl">
+                    <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                        <h2 class="text-xs uppercase tracking-widest text-slate-400">Historial reciente</h2>
+                        <span class="text-[10px] text-green-500 uppercase tracking-wider">Online</span>
+                    </div>
+                    <recent-activities :activities="activities"></recent-activities>
+                </div>
+            </aside>
+        </div>
     </div>
-</main>
+</div>
 
 <script type="text/x-template" id="recent-activities-template">
     {% include 'activity/recentActivity.html.twig' %}
@@ -13,14 +45,5 @@
 
 <script type="text/x-template" id="activity-form-template">
     {% include 'activity/activityForm.html.twig' %}
-</script>
-<div id="activity-app" class="min-h-screen bg-slate-950 flex flex-col lg:flex-row">
-    <aside class="w-full lg:w-80 ...">
-        <recent-activities :activities="activities"></recent-activities>
-    </aside>
-</div>
-
-<script type="text/x-template" id="recent-activities-template">
-    {% include 'activity/recentActivity.html.twig' %}
 </script>
 {% endblock %}

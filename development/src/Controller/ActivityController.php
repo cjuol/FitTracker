@@ -42,7 +42,7 @@ final class ActivityController extends AbstractController
 
 
     /**
-     * Crea una nueva actividad a partir del texto estilo Google Keep.
+     * Crea una nueva actividad a partir de texto o sets estructurados.
      */
     #[Route('create', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
@@ -52,11 +52,18 @@ final class ActivityController extends AbstractController
         
         try {
             $type = ActivityType::from($payload['type'] ?? '');
-            $sets = $this->processor->process($type, $payload['content'] ?? '');
+
+            if (!empty($payload['sets']) && \is_array($payload['sets'])) {
+                $sets = $this->processor->processStructured($type, $payload['sets']);
+                $rawContent = $payload['rawContent'] ?? '';
+            } else {
+                $rawContent = $payload['content'] ?? '';
+                $sets = $this->processor->process($type, $rawContent);
+            }
 
             $activity = new Activity();
             $activity->setType($type);
-            $activity->setRawContent($payload['content']);
+            $activity->setRawContent($rawContent);
             $activity->setPayloadFromSets($sets);
             $activity->setActive(true);
             $activity->setCreatedAt(new \DateTimeImmutable('now'));
